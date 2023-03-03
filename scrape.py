@@ -33,8 +33,8 @@ def fetch_pages(page_data):
 def get_resume():
     return
 
-string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
-s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
+# string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
+# s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
 # print(find_pattern(string))
 def main ():
     url = 'https://www.jobspider.com/job/resume-search-results.asp/words_engineer/searchtype_1/page_3'
@@ -43,12 +43,10 @@ def main ():
     resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
-    # fetch_pages(links)
+    fetch_pages(links)
     soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
-    # print(soup_plus.find('h1'))
-    content = soup_plus.find(id='Table3').parent
-    print(content.find_all('font').__len__())
-    for i in soup_plus.find_all('font',attrs={'color': ['#000000', '#000f99']}):
+    # content = soup_plus.find(id='Table3').parent
+    for i in soup_plus.find_all('font', attrs={'color': ['#000000', '#000f99']}):
         if re.search(r'Candidate|JobSpider', i.text) or not i.text:
             continue
         field = re.search(r'[a-zA-Z]+:', i.text)
