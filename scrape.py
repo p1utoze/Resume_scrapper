@@ -16,7 +16,7 @@ def fetch_pages(page_link):
     resume_doc = BeautifulSoup(requests.get(page_link).content, 'lxml')
 
 
-def find_pattern(s:str):
+def find_pattern(s: str):
     patt = re.search(r'/page_[0-9]+', s)
     try:
         return patt.string
@@ -33,6 +33,7 @@ def main ():
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-83943.html')
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
+    print(links)
 
 if __name__ == "__main__":
     main()
