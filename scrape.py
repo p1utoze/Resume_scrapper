@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import urllib.parse as up
+import pandas as pd
 import re
 
 
@@ -12,16 +13,23 @@ import re
 
 
 # print(page.prettify())
-def fetch_pages(page_link):
-    resume_doc = BeautifulSoup(requests.get(page_link).content, 'lxml')
+def fetch_pages(page_data):
+    d = pd.DataFrame(columns=['index', 'spider_id','industry', 'role', 'work_type', 'location', 'job_level', 'expected_wage', 'will_travel', 'will_relocate', 'objective','highest_degree', 'objective', 'experience', 'education', 'skills'])
+    for i in page_data.find_all_next('a'):
+        uri = i['href']
+        if re.search(r'^/job/view-resume+html'):
+
+        elif re.search(r'/page_[0-9]+', uri):
+            page = up.urljoin('https://www.jobspider.com', uri)
+            next_page = BeautifulSoup(requests.get(page).content, 'lxml')
+        else:
 
 
+
+def get_resume():
+    return
 def find_pattern(s: str):
-    patt = re.search(r'/page_[0-9]+', s)
-    try:
-        return patt.string
-    except AttributeError:
-        return None
+    return s
 
 string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
 s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
@@ -33,7 +41,7 @@ def main ():
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-83943.html')
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
-    print(links)
+    fetch_pages(links)
 
 if __name__ == "__main__":
     main()
