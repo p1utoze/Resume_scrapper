@@ -21,12 +21,17 @@ def fetch_pages(page_data):
         if re.search(r'^/job/view-resume+html', uri):
             resume = up.urljoin('https://www.jobspider.com', uri)
             for key, value in get_resume(resume):
-                d[key] = d.get(key, value)
+                if not d.get(key, None):
+                    d[key] = [value]
+                else:
+                    d[key].append(value)
 
         elif re.search(r'/page_[0-9]+', uri):
             page = up.urljoin('https://www.jobspider.com', uri)
             soup = BeautifulSoup(requests.get(page).content, 'lxml')
             links = soup.find_all('font')[13]
+            fetch_pages(links)
+    return d
 
 
 def get_resume(doc):
