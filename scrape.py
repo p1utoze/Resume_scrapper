@@ -20,8 +20,8 @@ def fetch_pages(page_data):
         uri = i['href']
         if re.search(r'^/job/view-resume+html', uri):
             resume = up.urljoin('https://www.jobspider.com', uri)
-            key, value = get_resume(resume)
-            d[key] = d.get(key, value)
+            for key, value in get_resume(resume):
+                d[key] = d.get(key, value)
 
         elif re.search(r'/page_[0-9]+', uri):
             page = up.urljoin('https://www.jobspider.com', uri)
