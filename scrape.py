@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import urllib.parse as up
 import pandas as pd
 import re
-
+import time
 # print(page.prettify())
 def fetch_pages(page_data):
     for i in page_data.find_all_next('a'):
@@ -20,12 +20,11 @@ def resume_links(page_data, d):
         uri = i['href']
         if re.search(r'^/job/view-resume+', uri):
             resume = up.urljoin('https://www.jobspider.com', uri)
-            print('Extracting page: ', resume, '\n......')
+            print('---->     Extracting page: ', resume, '\n    ......')
             for key, value in get_resume(resume):
                 if not d.get(key, None):
-                    d[key] = [value]
-                else:
-                    d[key].append(value)
+                    d.setdefault(key, []).append(value)
+    return d
 
 def get_resume(doc):
     soup = BeautifulSoup(requests.get(doc).text, 'lxml')
@@ -41,17 +40,26 @@ def get_resume(doc):
 # s = '/job/view-resume-83943.html'
 # print(re.match(r'^/job/view-resume+', s).string)
 def main ():
+    start = time.time()
     url = 'https://www.jobspider.com/job/resume-search-results.asp/words_engineer/searchtype_1'
     site = requests.get(url)
     check_pages = {}
-    resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
+    # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
-    resume_links(links, {})
-    for page in fetch_pages(links):
-        if not check_pages.get(page, None):
-            check_pages[page] = 1
-            # print('FETCHED: ', page)
+    d = resume_links(links, {})
+
+    # for page in fetch_pages(links):
+    #     if not check_pages.get(page, None):
+    #         print('\nPage: ', page)
+    #         soup = BeautifulSoup(requests.get(page).text, 'lxml')
+    #         features = soup.find_all('font')[13]
+    #         d = resume_links(features, d)
+    #         print('Resumes fetched: ', d['SpiderID'].__len__())
+    #         check_pages[page] = 1
+    del check_pages
+    end = time.time() - start
+    print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
     # content = soup_plus.find(id='Table3').parent
     # for i in soup_plus.find_all('font', attrs={'color': ['#000000', '#000f99']}):
