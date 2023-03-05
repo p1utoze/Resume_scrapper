@@ -26,6 +26,7 @@ def resume_links(page_data, d):
                     d[key] = [value]
                 else:
                     d[key].append(value)
+    return d
 
 def get_resume(doc):
     soup = BeautifulSoup(requests.get(doc).text, 'lxml')
@@ -47,7 +48,8 @@ def main ():
     resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
-    resume_links(links, {})
+    d = resume_links(links, {})
+    print(d.keys())
     for page in fetch_pages(links):
         if not check_pages.get(page, None):
             check_pages[page] = 1
