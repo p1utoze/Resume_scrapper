@@ -22,8 +22,7 @@ def resume_links(page_data, d):
             resume = up.urljoin('https://www.jobspider.com', uri)
             print('---->     Extracting page: ', resume, '\n    ......')
             for key, value in get_resume(resume):
-                if not d.get(key, None):
-                    d.setdefault(key, []).append(value)
+                d.setdefault(key, []).append(value)
     return d
 
 def get_resume(doc):
@@ -39,7 +38,7 @@ def get_resume(doc):
 # s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
 # s = '/job/view-resume-83943.html'
 # print(re.match(r'^/job/view-resume+', s).string)
-def main ():
+def scrape():
     start = time.time()
     url = 'https://www.jobspider.com/job/resume-search-results.asp/words_engineer/searchtype_1'
     site = requests.get(url)
@@ -48,18 +47,19 @@ def main ():
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
     d = resume_links(links, {})
-
-    # for page in fetch_pages(links):
-    #     if not check_pages.get(page, None):
-    #         print('\nPage: ', page)
-    #         soup = BeautifulSoup(requests.get(page).text, 'lxml')
-    #         features = soup.find_all('font')[13]
-    #         d = resume_links(features, d)
-    #         print('Resumes fetched: ', d['SpiderID'].__len__())
-    #         check_pages[page] = 1
+    print(d['SpiderID'])
+    for page in fetch_pages(links):
+        if not check_pages.get(page, None):
+            print('\nPage: ', page)
+            soup = BeautifulSoup(requests.get(page).text, 'lxml')
+            features = soup.find_all('font')[13]
+            d = resume_links(features, d)
+            print('Resumes fetched: ', d['SpiderID'].__len__())
+            check_pages[page] = 1
     del check_pages
     end = time.time() - start
     print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
+    return d
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
     # content = soup_plus.find(id='Table3').parent
     # for i in soup_plus.find_all('font', attrs={'color': ['#000000', '#000f99']}):
@@ -70,7 +70,3 @@ def main ():
     #         print(field.group()[:-1])
     #         content = re.sub(r'[a-zA-Z]+:', '', i.text)
     #         print('CONTENT:', content, end='\n----------\n')
-
-
-if __name__ == "__main__":
-    main()
