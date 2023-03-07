@@ -1,10 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 import urllib.parse as up
-import pandas as pd
 import re
 import time
-# print(page.prettify())
+
+
 def fetch_pages(page_data):
     for i in page_data.find_all_next('a'):
         uri = i['href']
@@ -20,26 +20,36 @@ def resume_links(page_data, d):
         uri = i['href']
         if re.search(r'^/job/view-resume+', uri):
             resume = up.urljoin('https://www.jobspider.com', uri)
+            soup = BeautifulSoup(requests.get(resume).text, 'lxml')
             print('---->     Extracting page: ', resume, '\n    ......')
-            for key, value in get_resume(resume):
-                if not d.get(key, None):
-                    d.setdefault(key, []).append(value)
+            d.setdefault('Role', []).append(soup.find('h1').contents)
+            for key, value in get_resume(soup):
+                d.setdefault(key, []).append(value)
     return d
 
-def get_resume(doc):
-    soup = BeautifulSoup(requests.get(doc).text, 'lxml')
-    for i in soup.find_all('font', attrs={'color': ['#000000', '#000f99']}):
-        if re.search(r'Candidate|JobSpider', i.text) or not i.text:
+def get_resume(soup):
+    for i in soup.find_all('font', attrs={'size': ['1', '2']}):
+        if re.search(r'Candidate|JobSpider', i.text) or not i.text or i['color'] == '#6F6F6F':
             continue
-        field = re.search(r'[a-zA-Z]+:', i.text)
-        if field and not field.group()[0].islower():
-            yield field.group()[:-1], re.sub(r'[a-zA-Z]+:', '', i.text)
+        if i['color'] == '#000f99':
+            value = i.find_next('font').get_text(separator='\n', strip=True)
+            yield i.b.string[:-1], value
+        elif i['color'] == '#000000':
+            # field = re.search(r'[a-zA-Z]+:', i.text)
+            # if field and not field.group()[0].islower():
+            #     yield field.group()[:-1], re.sub(r'[a-zA-Z]+:', '', i.text)
+            content = i.text.strip().split(': ')
+            try:
+                yield content[0], content[1]
+            except IndexError:
+                yield content[0], None
+
 
 # string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
 # s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
 # s = '/job/view-resume-83943.html'
 # print(re.match(r'^/job/view-resume+', s).string)
-def main ():
+def scrape():
     start = time.time()
     url = 'https://www.jobspider.com/job/resume-search-results.asp/words_engineer/searchtype_1'
     site = requests.get(url)
@@ -48,18 +58,19 @@ def main ():
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
     d = resume_links(links, {})
-
-    # for page in fetch_pages(links):
-    #     if not check_pages.get(page, None):
-    #         print('\nPage: ', page)
-    #         soup = BeautifulSoup(requests.get(page).text, 'lxml')
-    #         features = soup.find_all('font')[13]
-    #         d = resume_links(features, d)
-    #         print('Resumes fetched: ', d['SpiderID'].__len__())
-    #         check_pages[page] = 1
+    for page in fetch_pages(links):
+        if not check_pages.get(page, None):
+            print('\nPage: ', page)
+            soup = BeautifulSoup(requests.get(page).text, 'lxml')
+            features = soup.find_all('font')[13]
+            d = resume_links(features, d)
+            print('Resumes fetched: ', d['SpiderID'].__len__())
+            check_pages[page] = 1
     del check_pages
     end = time.time() - start
+    print(d['Role'])
     print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
+    return d
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
     # content = soup_plus.find(id='Table3').parent
     # for i in soup_plus.find_all('font', attrs={'color': ['#000000', '#000f99']}):
@@ -70,7 +81,3 @@ def main ():
     #         print(field.group()[:-1])
     #         content = re.sub(r'[a-zA-Z]+:', '', i.text)
     #         print('CONTENT:', content, end='\n----------\n')
-
-
-if __name__ == "__main__":
-    main()
