@@ -81,5 +81,3 @@ def scrape():
     #         print(field.group()[:-1])
     #         content = re.sub(r'[a-zA-Z]+:', '', i.text)
     #         print('CONTENT:', content, end='\n----------\n')
-
-d = scrape()
