@@ -24,6 +24,7 @@ def resume_links(page_data, d):
             print('---->     Extracting page: ', resume, '\n    ......')
             d.setdefault('Role', []).append(soup.find('h1').contents)
             for key, value in get_resume(soup):
+                print(f'{key=}\n{value=}')
                 d.setdefault(key, []).append(value)
     return d
 
@@ -38,11 +39,11 @@ def get_resume(soup):
             # field = re.search(r'[a-zA-Z]+:', i.text)
             # if field and not field.group()[0].islower():
             #     yield field.group()[:-1], re.sub(r'[a-zA-Z]+:', '', i.text)
-            content = i.text.strip().split(': ')
-            try:
-                yield content[0], content[1]
-            except IndexError:
+            content = i.text.strip().split(':')
+            if not content[1]:
                 yield content[0], None
+            else:
+                yield content[0], content[1].strip()
 
 
 # string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
@@ -58,14 +59,14 @@ def scrape():
     soup = BeautifulSoup(site.text, "lxml")
     links = soup.find_all('font')[13]
     d = resume_links(links, {})
-    for page in fetch_pages(links):
-        if not check_pages.get(page, None):
-            print('\nPage: ', page)
-            soup = BeautifulSoup(requests.get(page).text, 'lxml')
-            features = soup.find_all('font')[13]
-            d = resume_links(features, d)
-            print('Resumes fetched: ', d['SpiderID'].__len__())
-            check_pages[page] = 1
+    # for page in fetch_pages(links):
+    #     if not check_pages.get(page, None):
+    #         print('\nPage: ', page)
+    #         soup = BeautifulSoup(requests.get(page).text, 'lxml')
+    #         features = soup.find_all('font')[13]
+    #         d = resume_links(features, d)
+    #         print('Resumes fetched: ', d['SpiderID'].__len__())
+    #         check_pages[page] = 1
     del check_pages
     end = time.time() - start
     print(d['Role'])
