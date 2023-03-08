@@ -22,8 +22,9 @@ def resume_links(page_data, d):
             resume = up.urljoin('https://www.jobspider.com', uri)
             soup = BeautifulSoup(requests.get(resume).text, 'lxml')
             print('---->     Extracting page: ', resume, '\n    ......')
-            d.setdefault('Role', []).append(soup.find('h1').contents)
+            d.setdefault('Role', []).append(soup.find('h1').text)
             for key, value in get_resume(soup):
+                # print(f'{key=}\n{value=}')
                 d.setdefault(key, []).append(value)
     return d
 
@@ -38,20 +39,20 @@ def get_resume(soup):
             # field = re.search(r'[a-zA-Z]+:', i.text)
             # if field and not field.group()[0].islower():
             #     yield field.group()[:-1], re.sub(r'[a-zA-Z]+:', '', i.text)
-            content = i.text.strip().split(': ')
-            try:
-                yield content[0], content[1]
-            except IndexError:
+            content = i.text.strip().split(':')
+            if not content[1]:
                 yield content[0], None
+            else:
+                yield content[0], content[1].strip()
 
 
 # string = '/job/resume-search-results.asp/words_engineer/searchtype_1/page_4'
 # s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
 # s = '/job/view-resume-83943.html'
 # print(re.match(r'^/job/view-resume+', s).string)
-def scrape():
+def scrape(search='engineer'):
     start = time.time()
-    url = 'https://www.jobspider.com/job/resume-search-results.asp/words_engineer/searchtype_1'
+    url = f'https://www.jobspider.com/job/resume-search-results.asp/words_{search}/searchtype_1'
     site = requests.get(url)
     check_pages = {}
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
@@ -68,7 +69,7 @@ def scrape():
             check_pages[page] = 1
     del check_pages
     end = time.time() - start
-    print(d['Role'])
+    # print(d['Role'])
     print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
     return d
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
@@ -81,3 +82,5 @@ def scrape():
     #         print(field.group()[:-1])
     #         content = re.sub(r'[a-zA-Z]+:', '', i.text)
     #         print('CONTENT:', content, end='\n----------\n')
+
+# d = scrape(')
