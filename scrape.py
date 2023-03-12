@@ -50,9 +50,12 @@ def get_resume(soup):
 # s = '/job/resume-search-results.asp/words_engineer/searchtype_1/sort_5'
 # s = '/job/view-resume-83943.html'
 # print(re.match(r'^/job/view-resume+', s).string)
-def scrape(search='engineer'):
+def scrape(search='engineer', category=True, cat_no=1):
     start = time.time()
-    url = f'https://www.jobspider.com/job/resume-search-results.asp/words_{search}/searchtype_1'
+    if category:
+        url = f'https://www.jobspider.com/job/resume-search-results.asp/category_{cat_no}'
+    else:
+        url = f'https://www.jobspider.com/job/resume-search-results.asp/words_{search}/searchtype_1'
     site = requests.get(url)
     check_pages = {}
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
