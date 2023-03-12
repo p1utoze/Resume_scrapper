@@ -1,6 +1,5 @@
 from scrape import scrape
-import argparse
-import sys
+import argparse, pandas as pd
 parser = argparse.ArgumentParser(prog='scraper',
                                  description='A script to scrape Resumes of various domains'
                                              'listed in www.jobspider.com',
@@ -11,11 +10,21 @@ parser = argparse.ArgumentParser(prog='scraper',
 
 myargs_group = parser.add_mutually_exclusive_group(required=False)
 myargs_group.add_argument('-n', '--domain', type=str, action='store')
-myargs_group.add_argument('-c', '--category', action='store')
+myargs_group.add_argument('-c', '--category', type=int, action='store')
 args = parser.parse_args()
 
+
 if args.domain:
-    print('hi')
+    print('hi', args.domain)
+    d = scrape(args.domain)
+    df = pd.DataFrame.from_dict(d, orient='index').T
+    df.to_csv(f"resume_data_{args.domain}")
+
+elif args.category:
+    print('Bye', args.category)
+    d = scrape(category=True, cat_no=args.category)
+    df = pd.DataFrame.from_dict(d, orient='index').T
+    df.to_csv(f"resume_data_category_{args.category}")
 
 else:
     print(parser.description)
