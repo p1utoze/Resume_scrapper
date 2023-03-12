@@ -56,6 +56,7 @@ def scrape(search='engineer', category=False, cat_no=None):
         url = f'https://www.jobspider.com/job/resume-search-results.asp/category_{cat_no}'
     else:
         url = f'https://www.jobspider.com/job/resume-search-results.asp/words_{search}/searchtype_1'
+    print('SITE: ', url)
     site = requests.get(url)
     check_pages = {}
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
