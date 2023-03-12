@@ -56,6 +56,7 @@ def scrape(search='engineer', category=False, cat_no=None):
         url = f'https://www.jobspider.com/job/resume-search-results.asp/category_{cat_no}'
     else:
         url = f'https://www.jobspider.com/job/resume-search-results.asp/words_{search}/searchtype_1'
+    print('SITE: ', url)
     site = requests.get(url)
     check_pages = {}
     # resume_doc = up.urljoin('https://www.jobspider.com', '/job/view-resume-78327.html')
@@ -73,7 +74,7 @@ def scrape(search='engineer', category=False, cat_no=None):
     del check_pages
     end = time.time() - start
     # print(d['Role'])
-    print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
+    print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end/60.0} min")
     return d
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
     # content = soup_plus.find(id='Table3').parent
