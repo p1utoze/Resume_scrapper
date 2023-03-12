@@ -74,7 +74,7 @@ def scrape(search='engineer', category=False, cat_no=None):
     del check_pages
     end = time.time() - start
     # print(d['Role'])
-    print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end} s")
+    print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end/60.0} min")
     return d
     # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
     # content = soup_plus.find(id='Table3').parent
