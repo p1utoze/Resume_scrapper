@@ -10,7 +10,6 @@ def fetch_pages(page_data):
         uri = i['href']
         if re.search(r'/page_[0-9]+', uri):
             page = up.urljoin('https://www.jobspider.com', uri)
-            # soup = BeautifulSoup(requests.get(page).content, 'lxml')
             yield page
 
 
@@ -76,15 +75,5 @@ def scrape(search='engineer', category=False, cat_no=None):
     # print(d['Role'])
     print(f"Total features: {d.keys()}\nTotal Resumes Extracted: {d['SpiderID'].__len__()}\nTotal time: {end/60.0} min")
     return d
-    # soup_plus = BeautifulSoup(requests.get(resume_doc).text, 'lxml')
-    # content = soup_plus.find(id='Table3').parent
-    # for i in soup_plus.find_all('font', attrs={'color': ['#000000', '#000f99']}):
-    #     if re.search(r'Candidate|JobSpider', i.text) or not i.text:
-    #         continue
-    #     field = re.search(r'[a-zA-Z]+:', i.text)
-    #     if field and not field.group()[0].islower():
-    #         print(field.group()[:-1])
-    #         content = re.sub(r'[a-zA-Z]+:', '', i.text)
-    #         print('CONTENT:', content, end='\n----------\n')
 
 # d = scrape(')
