@@ -23,11 +23,30 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 <hr>
+
 ## Using the command
 
 * Again, make sure you are inside the repository. To use the command and get help, type:
 ```
 $ python3 scrape_cli.py -h
 ```
-* There are two command options: `--category <number>` and `--domain <keyword>`.
-  1. For scrapping the Resumes by category, go to this url: https://www.jobspider.com/job/browse-resumes.asp
+* There are two command options: `--category <number>` and `--domain <keyword>`:
+
+  1. For scrapping the Resumes by category, go to this url: https://www.jobspider.com/job/browse-resumes.asp and select the category:
+     Check the category number in the url
+     Go back to your command line and enter the category number argument (here in the image, 16) <br>
+     ```
+     $ python3 scrape_cli.py -c 16
+     ```
+     
+  2. For scrapping by search keyword, go to this url: https://www.jobspider.com/job/resume-search.asp
+     Enter the same keyword used in the search box in the command line argument like this
+     ```
+     $ python3 scrape_cli.py -d developer
+     ```
+     
+<hr>
+
+If done correctly you'll get a final web scrapped summary of resumes!
+
+#### Feel free to contribute to this tool for more advanced searches or reducing the search time 
