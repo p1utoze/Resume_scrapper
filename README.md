@@ -1,6 +1,6 @@
 # Resume_scrapper
 
-A CLI tool specifically designed to scrape this webpage: https://www.jobspider.com/job/resume-search.asp
+A CLI tool specifically designed to scrape this webpage: https://www.jobspider.com/job/
 
 <hr style="height:1px;border:none;">
 
@@ -29,4 +29,5 @@ pip install -r requirements.txt
 ```
 $ python3 scrape_cli.py -h
 ```
-*
+* There are two command options: `--category <number>` and `--domain <keyword>`.
+  1. For scrapping the Resumes by category, go to this url: https://www.jobspider.com/job/browse-resumes.asp
