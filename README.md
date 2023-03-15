@@ -38,7 +38,7 @@ $ python3 scrape_cli.py -h
      
      Check the category number in the url-
      
-     ![alt text](https://github.com/p1utoze/Resume_scrapper/blob/main/static/image3.png?raw=true)
+     ![alt text](https://github.com/p1utoze/Resume_scrapper/blob/main/static/image3.jpeg?raw=true)
      
      Go back to your command line and enter the category number argument (here in the image, 16) <br>
      ```
