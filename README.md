@@ -23,3 +23,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 <hr>
+## Using the command
+
+* Again, make sure you are inside the repository. To use the command and get help, type:
+```
+$ python3 scrape_cli.py -h
+```
+*
