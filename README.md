@@ -33,13 +33,22 @@ $ python3 scrape_cli.py -h
 * There are two command options: `--category <number>` and `--domain <keyword>`:
 
   1. For scrapping the Resumes by category, go to this url: https://www.jobspider.com/job/browse-resumes.asp and select the category:
-     Check the category number in the url
+  
+     ![alt text](https://github.com/p1utoze/Resume_scrapper/blob/main/static/image1.png?raw=true)
+     
+     Check the category number in the url-
+     
+     ![alt text](https://github.com/p1utoze/Resume_scrapper/blob/main/static/image3.png?raw=true)
+     
      Go back to your command line and enter the category number argument (here in the image, 16) <br>
      ```
      $ python3 scrape_cli.py -c 16
      ```
      
   2. For scrapping by search keyword, go to this url: https://www.jobspider.com/job/resume-search.asp
+     
+     ![alt text](https://github.com/p1utoze/Resume_scrapper/blob/main/static/image2.png?raw=true)
+
      Enter the same keyword used in the search box in the command line argument like this
      ```
      $ python3 scrape_cli.py -d developer
